@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  super_admin
+  admin
+  user
+}
+
+model Users {
+  id        String    @id @default(uuid()) @db.VarChar(36)
+  email      String   @unique
+  name       String?
+  password   String
+  role       Role     @default(user)
+  profile    String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Ticket     Ticket[]
+}
+
+enum TrainStatus {
+  active
+  inactive
+  maintenance
+}
+
+// محددات القطار
+model Train {
+  id        String    @id @default(uuid()) @db.VarChar(36)
+  name      String
+  status    TrainStatus
+  seatCount Int
+  line      Line        @relation(fields: [lineId], references: [id])
+  trips     Trip[]
+  cars      Car[]
+  lineId    String
+}
+
+enum CarType {
+  first_class
+  second_class
+}
+
+// عربات القطار
+model Car {
+   id        String    @id @default(uuid()) @db.VarChar(36)
+  train     Train     @relation(fields: [trainId], references: [id],onDelete: Cascade)
+  trainId   String
+  type      CarType
+  seatCount Int
+  tickets   Ticket[]
+  Seat      Seat[]
+}
+
+// خطوط القطار
+model Line {
+  id        String    @id @default(uuid()) @db.VarChar(36)
+  number      Int
+  origin      String
+  destination String
+  trains      Train[]
+}
+
+// رحلات القطار
+model Trip {
+   id        String    @id @default(uuid()) @db.VarChar(36)
+  train         Train    @relation(fields: [trainId], references: [id],onDelete: Cascade)
+  trainId       String
+  departureDate DateTime
+  arrivalDate   DateTime
+  tickets       Ticket[]
+  from          String
+  to            String
+}
+
+// تذاكر القطار
+model Ticket {
+   id        String    @id @default(uuid()) @db.VarChar(36)
+  car        Car      @relation(fields: [carId], references: [id],onDelete: Cascade)
+  carId      String
+  seatNumber Int
+  price      Float
+  passenger  String
+  trip       Trip     @relation(fields: [tripId], references: [id],onDelete: Cascade)
+  tripId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       Users    @relation(fields: [userId], references: [id],onDelete: Cascade)
+  userId     String
+  Seat       Seat?    @relation(fields: [seatId], references: [id],onDelete: SetNull)
+  seatId     String?
+}
+
+model Seat {
+   id        String    @id @default(uuid()) @db.VarChar(36)
+  car        Car      @relation(fields: [carId], references: [id],onDelete: Cascade)
+  carId      String
+  seatNumber Int      @unique
+  isBooked   Boolean  @default(false)
+  ticket     Ticket[]
+}
