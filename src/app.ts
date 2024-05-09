@@ -5,8 +5,8 @@ import lineRouter from "./routes/line";
 import carRouter from "./routes/car";
 import cors from "cors";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import session from "express-session";
-import morgan from "morgan";
 import {
   Strategy as GoogleStrategy,
 } from 'passport-google-oauth2'
@@ -25,7 +25,7 @@ const options = {
 app.use(errorHandlingMiddleware);
 app.use(bodyParser.json());
 app.use(cors(options));
-app.use(morgan("tiny"));
+app.use(cookieParser());
 const port = 3000;
 
 // middleware isLodgedIn

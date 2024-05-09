@@ -63,7 +63,7 @@ export const register = async (req:any, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const {email,password} = req.body as LoginInput
+        const {email,password} = await req.body 
         if (!email || !password) {
             return res.status(400).json({
                 error: 'Email and password are required',
@@ -102,13 +102,16 @@ export const login = async (req: Request, res: Response) => {
         const token = sign({
             id: user.id,
             email: user.email,
+            picture : user.profile,
+            name : user.name,
+            role : user.role,
         }, secrets.jwtSecret, {
             expiresIn: secrets.jwtExpiration,
         })
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+        
+        const credentials = req.cookies.credentials
+        res.cookie('credentials', token,{
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         })
         res.status(200).redirect('/')
 
