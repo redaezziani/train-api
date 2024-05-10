@@ -24,3 +24,21 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({
+    message: 'give a valid email address please',
+  }),
+});
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(6).max(100,{
+    message: 'password must be atleast 6 characters long',
+  }),
+});
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

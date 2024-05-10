@@ -6,11 +6,15 @@ import {
     updateCar,
     deleteCar,
 } from '../controllers/car';
+import { isAdmin, isAuthenticated } from '../middlewares/auth';
+
 const carRouter = express.Router();
-carRouter.get('/cars', getCars);
-carRouter.get('/car/:id', getCar);
-carRouter.post('/car', createCar);
-carRouter.put('/car/:id', updateCar);
-carRouter.delete('/car/:id', deleteCar);
+
+// Car Routes
+carRouter.get('/cars', isAuthenticated,getCars);
+carRouter.get('/car/:id', isAuthenticated,getCar);
+carRouter.post('/car', isAdmin,createCar);
+carRouter.put('/car/:id', isAdmin,updateCar);
+carRouter.delete('/car/:id', isAdmin,deleteCar);
 
 export default carRouter;

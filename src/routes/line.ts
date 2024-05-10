@@ -6,12 +6,15 @@ import {
     updateLine,
     deleteLine,
 } from '../controllers/line';
-import { isAdmin } from '../middlewares/admin';
+import { isAdmin,isAuthenticated } from '../middlewares/auth';
+
 const lineRouter = express.Router();
-lineRouter.get('/lines', getLines);
-lineRouter.get('/line/:id', getLine);
+
+// Line Routes
+lineRouter.get('/lines', isAuthenticated,getLines);
+lineRouter.get('/line/:id', isAuthenticated,getLine);
 lineRouter.post('/line',isAdmin, createLine);
-lineRouter.put('/line/:id', updateLine);
-lineRouter.delete('/line/:id', deleteLine);
+lineRouter.put('/line/:id',isAdmin ,updateLine);
+lineRouter.delete('/line/:id', isAdmin,deleteLine);
 
 export default lineRouter;

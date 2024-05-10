@@ -26,6 +26,13 @@ model Users {
   Ticket     Ticket[]
 }
 
+model resetPassword {
+  id        String    @id @default(uuid()) @db.VarChar(36)
+  email      String  @unique
+  token      Int
+  createdAt  DateTime @default(now())
+}
+
 enum TrainStatus {
   active
   inactive

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { login, register } from '../controllers/auth';
+import { login, register,forgotPassword ,resetPassword} from '../controllers/auth';
 const authRouter = express.Router();
 
 
@@ -7,14 +7,10 @@ const authRouter = express.Router();
 
 authRouter.post('/login', login);
 
-authRouter.post('/forgot-password', (req:Request, res:Response) => {
-    res.send('Forgot Password Page');
-});
+authRouter.post('/forgot-password', forgotPassword);
 
 
-authRouter.post('/reset-password', (req:Request, res:Response) => {
-    res.send('Reset Password Page');
-});
+authRouter.post('/reset-password', resetPassword);
 
 authRouter.post('/verify-email', (req:Request, res:Response) => {
     res.send('Verify Email Page');
