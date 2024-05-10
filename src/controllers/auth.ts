@@ -172,7 +172,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         const resetPasswordToken = await db.resetPassword.create({
             data: {
                 email,
-                secret,
+                token: secret,
             },
         })
         if (!resetPasswordToken) {
@@ -236,7 +236,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         const resetPasswordToken = await db.resetPassword.findFirst({
             where: {
                 email,
-                secret,
+                token: secret,
             },
         })
 
