@@ -171,7 +171,7 @@ The API provides the following routes for each model:
 - `/route/:id`: Get details of a specific route.
 - `/route`: Create a new route (Admin only).
 - `/route/:id`: Update details of a route (Admin only).
-- `/route/:id`: Delete a route (Admin only).
+- `/route/:id`: Delete a route (Admin only)
 
 
 
