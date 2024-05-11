@@ -13,28 +13,6 @@ Welcome to the Train Station Ticket Reservation API repository! This project pro
 ## Setup Instructions
 
 1. **Clone the Repository**: 
-
-    ```bash
-    
-Certainly! Here's the entire README.md content formatted as a Redfile in one code block:
-
-red
-Copy code
-# Train Station Ticket Reservation API
-
-Welcome to the Train Station Ticket Reservation API repository! This project provides a modern and efficient solution for booking train tickets at stations. The API is built using Node.js Express, with TypeScript, Zod, Prisma, MySQL, and Passport.js.
-
-## Table of Contents
-
-1. [Setup Instructions](#setup-instructions)
-2. [Available Endpoints](#available-endpoints)
-3. [Running the Project](#running-the-project)
-4. [Security Considerations](#security-considerations)
-5. [Model Routes](#model-routes)
-
-## Setup Instructions
-
-1. **Clone the Repository**: 
     
         ```bash
 git clone https://github.com/redaezziani/train-station-ticket-reservation-api.git
