@@ -14,14 +14,14 @@ Welcome to the Train Station Ticket Reservation API repository! This project pro
 
 1. **Clone the Repository**: 
     
-        ```bash
+ ```bash
 git clone https://github.com/redaezziani/train-station-ticket-reservation-api.git
 cd train-station-ticket-reservation-api
 ```
 
 2. **Install Dependencies**:
 
-    ```bash
+```bash
 npm install
 ```
 
@@ -29,7 +29,7 @@ npm install
 
     Create a `.env` file in the root directory and add the following environment variables:
 
-    ```bash
+```bash
 PORT=3000
 DB_URL="mysql://root:password@localhost:3306/train_station_ticket_reservation"
 JWT_SECRET
@@ -39,14 +39,14 @@ JWT_SECRET
 
     Run the Prisma migrations to create the database schema:
 
-    ```bash
+```bash
 npx prisma migrate dev
 ```
 5. **Run generate**:
 
     Run the Prisma generate to generate the client:
 
-    ```bash
+```bash
 npx prisma generate
 ```
 
@@ -54,7 +54,7 @@ npx prisma generate
 
     Seed the database with initial data:
 
-    ```bash
+```bash
 npx prisma db seed
 ```
 
@@ -62,7 +62,7 @@ npx prisma db seed
 
     Start the development server:
 
-    ```bash
+```bash
 npm run dev
 ```
 The API provides the following endpoints:
