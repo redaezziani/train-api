@@ -1,21 +1,21 @@
 import express, { Request, Response } from "express";
-import errorHandlingMiddleware from "./middlewares/errorHandling"; 
+import errorHandlingMiddleware from "./middlewares/errorHandling";
 import authRouter from "./routes/auth";
 import lineRouter from "./routes/line";
 import carRouter from "./routes/car";
 import trainRouter from "./routes/train";
 import seatRouter from "./routes/seat";
 import tripRouter from "./routes/trip";
+import ticketRouter from "./routes/ticket";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import {
-  Strategy as GoogleStrategy,
-} from 'passport-google-oauth2'
-import passport from 'passport'
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import secrets from "./secrets";
 import db from "./db";
+import { sign } from "jsonwebtoken";
 
 const app = express();
 const options = {
@@ -23,15 +23,24 @@ const options = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
 
-
-
 app.use(errorHandlingMiddleware);
 app.use(bodyParser.json());
 app.use(cors(options));
 app.use(cookieParser());
 const port = 3000;
 
-// middleware isLodgedIn
+// Configure express-session to use cookies
+app.use(session({
+  secret: secrets.sessionSecret,
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Middleware to check if the user is logged in
 const isLoggedIn = (req: Request, res: Response, next: any) => {
   if (req.isAuthenticated()) {
     return next();
@@ -39,95 +48,81 @@ const isLoggedIn = (req: Request, res: Response, next: any) => {
   res.redirect("/auth/google");
 }
 
-app.get("/auth/google/success", (req: Request, res: Response) => {
-  console.log(req.body);
-  res.send("Success");
-}
-);
-
-app.get("/auth/google/failure", (req: Request, res: Response) => {
-  res.send("Failure");
-});
-
+// Google authentication strategy
 passport.use(new GoogleStrategy({
-  clientID:     secrets.googleClientId,
+  clientID: secrets.googleClientId,
   clientSecret: secrets.googleClientSecret,
-  callbackURL: "http://localhost:3000/auth/google/callback",
-  passReqToCallback   : true
+  callbackURL: "http://localhost:3000/api/auth/google/callback",
+  passReqToCallback: true
 },
-//@ts-ignore
-async function(request, accessToken, refreshToken, profile, done) {
-  console.log(profile);
-  const user = await db.users.findUnique({
-    where: {
+async function(request: any, accessToken: any, refreshToken: any, profile: { email: any; displayName: any; photos: { value: any; }[]; }, done: (arg0: unknown, arg1: string | undefined) => any) {
+  try {
+    let user = await db.users.findUnique({
+      where: { email: profile.email },
+    });
+
+    if (!user) {
+      user = await db.users.create({
+        data: {
+          email: profile.email,
+          name: profile.displayName,
+          isVerified: true,
+          password: '',
+          profile: profile.photos[0].value, // Use the first photo as profile picture
+        },
+      });
+    }
+
+    // Create a JWT token
+    const token = sign({
+      id: user.id,
       email: profile.email,
-    },
-  })
+      picture: profile.photos[0].value, // Use the first photo as profile picture
+      name: profile.displayName,
+      role: user.role,
+    }, secrets.jwtSecret, {
+      expiresIn: secrets.jwtExpiration,
+    });
 
-  // Extracting profile picture from the Google profile
-  let pictureUrl = profile._json.picture;
-
-  // Trim the =s96-c suffix from the profile picture URL
-  pictureUrl = pictureUrl.replace(/=s\d{1,4}-c$/, '');
-
-  if (!user) {
-    await db.users.create({
-      data: {
-        email: profile.email,
-        name: profile.displayName,
-        isVerified: true,
-        password: '',
-        profile: pictureUrl, // Save profile picture URL to the database
-      },
-    })
+    return done(null, token);
+  } catch (error) {
+    return done(error, undefined);
   }
-  
-  return done(null, profile);
 }));
 
-
-
-app.use(session({
-  secret: 'tet',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}));
-
-
+// Serialize and deserialize user sessions
 passport.serializeUser(function(user, done) {
   done(null, user);
-}
-);
-
-passport.deserializeUser(function(obj, done) {
-  //@ts-ignore
-  done(null, obj);
-}
-);
-
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("welcome to the train API");
 });
 
-app.use("/auth", authRouter);
-app.use("/line", lineRouter);
-app.use("/car", carRouter);
-app.use("/train", trainRouter);
-app.use("/seat", seatRouter);
-app.use("/trip", tripRouter);
+passport.deserializeUser((obj:any, done) =>{
+  done(null, obj);
+});
 
-app.get('/auth/google',
-  passport.authenticate('google', { scope:
-      [ 'email', 'profile' ] }
-));
+// API routes
+app.get("/api", (req: Request, res: Response) => {
+  res.send("Welcome to the train API");
+});
 
-app.get( '/auth/google/callback',
-    passport.authenticate( 'google', {
-        successRedirect: '/',
-        failureRedirect: '/'
-}));
+app.use("/api/auth", authRouter);
+app.use("/api/line", lineRouter);
+app.use("/api/car", carRouter);
+app.use("/api/train", trainRouter);
+app.use("/api/seat", seatRouter);
+app.use("/api/trip", tripRouter);
+app.use("/api/ticket", ticketRouter);
+
+// Google authentication routes
+app.get('/api/auth/google',
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/api/auth/google/failure',
+    successRedirect: '/api/auth/google/success',
+  })
+);
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);

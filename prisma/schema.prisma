@@ -45,6 +45,7 @@ model verifyEmail {
   userId    String
   user      Users    @relation(fields: [userId], references: [id])
 }
+
 enum TrainStatus {
   active
   inactive
