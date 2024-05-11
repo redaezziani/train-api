@@ -3,13 +3,11 @@ import {Request,Response,} from 'express'
 import db from '../db'
 import secrets from '../secrets'
 import { ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../lib/types/auth'
-import session from 'express-session'
 import  {
     sign,
-    verify,
 } from 'jsonwebtoken'
 import { createForgotPasswordToken, extractToken, randomNumber } from '../services/create-token'
-import { sendFogotPasswordEmail } from '../services/send-email'
+import { sendFogotPasswordEmail, sendVerificationEmail } from '../services/send-email'
 
 
 export const register = async (req:any, res: Response) => {
@@ -48,13 +46,42 @@ export const register = async (req:any, res: Response) => {
                 email,
                 password: hashedPassword,
                 name,
+                isVerified: false,
             },
         })
         if (!register) {
             return res.status(400).json({
                 error: 'User not created',status: 'error',
             })
-        }   
+        }  
+        
+        const secret = randomNumber()
+        const token = await createForgotPasswordToken(email, secret)
+        // Send email with verification link
+
+        const send = await sendVerificationEmail(token)
+        if (send.status === 'error') {
+            return res.status(400).json({
+                error: 'Email not sent',status: 'error',
+            })
+        }
+        const verificationToken = await db.verifyEmail.create({
+            data: {
+                email,
+                token: secret,
+                user: {
+                    connect: {
+                        id: register.id,
+                    },
+                },
+            },
+        })
+
+        if (!verificationToken) {
+            return res.status(400).json({
+                error: 'Token not created, try again',status: 'error',
+            })
+        }
        
         res.status(201).redirect('/')
     } catch (error) {
@@ -91,6 +118,44 @@ export const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(400).json({
                 error: 'User not found',
+                status: 'error',
+            })
+        }
+        if (!user.isVerified) {
+            const secret = randomNumber()
+            const token = await createForgotPasswordToken(email, secret)
+            // Send email with verification link
+    
+            const send = await sendVerificationEmail(token)
+            if (send.status === 'error') {
+                return res.status(400).json({
+                    error: 'Email not sent',status: 'error',
+                })
+            }
+            const verificationToken = await db.verifyEmail.upsert({
+                where: {
+                    email,
+                },
+                update: {
+                    token: secret,
+                },
+                create: {
+                    email,
+                    token: secret,
+                    user: {
+                        connect: {
+                            id: user.id,
+                        },
+                    },
+                },
+            })
+            if (!verificationToken) {
+                return res.status(400).json({
+                    error: 'Token not created, try again',status: 'error',
+                })
+            }
+            return res.status(400).json({
+                error: 'Email not verified, check your inbox',
                 status: 'error',
             })
         }
@@ -173,6 +238,11 @@ export const forgotPassword = async (req: Request, res: Response) => {
             data: {
                 email,
                 token: secret,
+                user: {
+                    connect: {
+                        id: user.id,
+                    },
+                },
             },
         })
         if (!resetPasswordToken) {
@@ -264,4 +334,80 @@ export const resetPassword = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error)
     }
+}
+
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body
+    if (!token) {
+      return res.status(400).json({
+        error: 'Token is required',
+        status: 'error',
+      })
+    }
+    const data = extractToken(token)
+    if (!data) {
+      return res.status(400).json({
+        error: 'Invalid token',
+        status: 'error',
+      })
+    }
+    const { email, secret } = data
+    const user = await db.users.findUnique({
+      where: {
+        email,
+      },
+    })
+    if (!user) {
+      return res.status(400).json({
+        error: 'User not found',
+        status: 'error',
+      })
+    }
+    const verifyEmailToken = await db.verifyEmail.findFirst({
+      where: {
+        email,
+        token: secret,
+      },
+    })
+    if (!verifyEmailToken) {
+      return res.status(400).json({
+        error: 'Token not found',
+        status: 'error',
+      })
+    }
+    await db.users.update({
+      where: {
+        email,
+      },
+      data: {
+        isVerified: true,
+      },
+    })
+    if (!user.isVerified) {
+      return res.status(400).json({
+        error: 'Email not verified',
+        status: 'error',
+      })
+    }
+
+    await db.verifyEmail.delete({
+      where: {
+        email,
+      },
+    })
+    if (!verifyEmailToken) {
+      return res.status(400).json({
+        error: 'Token not deleted',
+        status: 'error',
+      })
+    }
+    res.status(200).json({
+      status: 'success',
+      message: 'Email verified successfully',
+    })
+  } catch (error) {
+    
+  }
 }

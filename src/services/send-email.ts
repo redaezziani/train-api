@@ -46,3 +46,45 @@ export const sendFogotPasswordEmail = async (token: string) => {
         }
     }
 }
+
+export const sendVerificationEmail = async (token: string) => {
+    try {
+        const { data, error } = await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: ["klausdev2@gmail.com"],
+            subject: "Verify your email",
+            html: `<h1>Verify your email</h1>
+            <p>Click
+            <a href="http://localhost:3000/auth/verify-email/${token}">
+            here
+            </a>to verify your email
+            </p><br/>
+            <p>
+            if not work just copy and paste this link in your browser
+            </p>
+            <p>
+            ${token}
+            </p>
+            <h4>
+            Note : this link will expire in 10 minutes
+            </h4>
+            `,
+            });
+
+        if (error) {
+            return {
+                status: 'error',
+                error: error
+            }
+        }
+        return {
+            status: 'success',
+            data: data
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            error: error
+        }
+    }
+}
