@@ -4,7 +4,18 @@ import { CreateCarInput, UpdateCarInput, createCarSchema, updateCarSchema } from
 
 export async function getCars(req: Request, res: Response) {
     try {
-        const cars = await db.car.findMany();
+        const { page = 1, limit = 10 } = req.query;
+        const currentPage = Number(page);
+        const currentLimit = Number(limit);
+        const offset = (currentPage - 1) * currentLimit;
+        const cars = await db.car.findMany({
+            include: {
+                train: true,
+            },
+            skip: offset,
+            take: currentLimit,
+        });
+        
         if (!cars) {
             res.status(404).json({ message: "No cars found" });
         }

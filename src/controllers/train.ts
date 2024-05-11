@@ -5,7 +5,19 @@ import { CreateTrainInput, UpdateTrainInput, createTrainSchema, updateTrainSchem
 
 export async function getTrains(req: Request, res: Response) {
     try {
-        const trains = await db.train.findMany();
+        const { page = 1, limit = 10 } = req.query;
+        const currentPage = Number(page);
+        const currentLimit = Number(limit);
+        const offset = (currentPage - 1) * currentLimit;
+        const trains = await db.train.findMany(
+            {
+                include: {
+                    line: true,
+                },
+                skip: offset,
+                take: currentLimit,
+            }
+        );
         if (!trains) {
             res.status(404).json({ message: "No trains found" });
         }

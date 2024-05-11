@@ -3,15 +3,20 @@ import db from "../db";
 import { CreateSeatInput, UpdateSeatInput, createSeatSchema, updateSeatSchema } from "../lib/types/seat";
 
 
+
 export async function getSeats(req: Request, res: Response) {
     try {
-        const seats = await db.seat.findMany(
-            {
-                include: {
-                    car: true,
-                },
-            }
-        );
+        const { page = 1, limit = 10 } = req.query;
+        const currentPage = Number(page);
+        const currentLimit = Number(limit);
+        const offset = (currentPage - 1) * currentLimit;
+        const seats = await db.seat.findMany({
+            include: {
+                car: true,
+            },
+            skip: offset,
+            take: currentLimit,
+        });
         if (!seats) {
             res.status(404).json({ message: "No seats found" });
         }

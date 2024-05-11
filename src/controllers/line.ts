@@ -5,7 +5,17 @@ import { CreateLineInput, UpdateLineInput, createLineSchema, updateLineSchema } 
 
 export async function getLines(req: Request, res: Response) {
     try {
-        const lines = await db.line.findMany() ;
+        const { page = 1, limit = 10 } = req.query;
+        const currentPage = Number(page);
+        const currentLimit = Number(limit);
+        const offset = (currentPage - 1) * currentLimit;
+        const lines = await db.line.findMany({
+            include: {
+                trains: true,
+            },
+            skip: offset,
+            take: currentLimit,
+        }) ;
         if (!lines) {
             res.status(404).json({ message: "No lines found" });
         }
