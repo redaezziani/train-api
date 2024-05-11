@@ -4,6 +4,7 @@ import authRouter from "./routes/auth";
 import lineRouter from "./routes/line";
 import carRouter from "./routes/car";
 import trainRouter from "./routes/train";
+import seatRouter from "./routes/seat";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -113,6 +114,7 @@ app.use("/auth", authRouter);
 app.use("/line", lineRouter);
 app.use("/car", carRouter);
 app.use("/train", trainRouter);
+app.use("/seat", seatRouter);
 
 app.get('/auth/google',
   passport.authenticate('google', { scope:

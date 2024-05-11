@@ -147,7 +147,7 @@ model Ticket {
 }
 
 model Seat {
-   id        String    @id @default(uuid()) @db.VarChar(36)
+  id        String    @id @default(uuid()) @db.VarChar(36)
   car        Car      @relation(fields: [carId], references: [id],onDelete: Cascade)
   carId      String
   seatNumber Int      @unique
