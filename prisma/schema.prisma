@@ -68,10 +68,39 @@ enum CarType {
   second_class
 }
 
+enum CarName {
+  A
+  B
+  C
+  D
+  E
+  F
+  G
+  H
+  I
+  J
+  K
+  L
+  M
+  N
+  O
+  P
+  Q
+  R
+  S
+  T
+  U
+  V
+  W
+  X
+  Y
+  Z
+}
 model Car {
-   id        String    @id @default(uuid()) @db.VarChar(36)
+  id        String    @id @default(uuid()) @db.VarChar(36)
   train     Train     @relation(fields: [trainId], references: [id],onDelete: Cascade)
-  trainId   String  
+  trainId   String   
+  name      CarName   @unique @default(A)
   type      CarType
   seatCount Int
   tickets   Ticket[]

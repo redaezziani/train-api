@@ -51,7 +51,26 @@ export async function getLine(req: Request, res: Response) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
-
+/**
+    * Create a new line
+    * @param req
+    * @param res
+    * @returns
+    * data: {
+    *  line: {
+    *   id: string,
+    *  number: string,
+    * origin: string,
+    * destination: string,
+    * createdAt: Date,
+    * updatedAt: Date,
+    * }
+    * }
+    * @throws
+    * 400 - Invalid input
+    * 404 - Line not found
+    * 500 - Internal Server Error
+ */
 
 export async function createLine(req: Request, res: Response) {
     try {

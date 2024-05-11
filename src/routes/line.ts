@@ -12,9 +12,9 @@ const lineRouter = express.Router();
 
 // Line Routes
 lineRouter.get('/lines', isAuthenticated,getLines);
-lineRouter.get('/line/:id', isAuthenticated,getLine);
-lineRouter.post('/line',isAdmin, createLine);
-lineRouter.put('/line/:id',isAdmin ,updateLine);
-lineRouter.delete('/line/:id', isAdmin,deleteLine);
+lineRouter.get('/:id', isAuthenticated,getLine);
+lineRouter.post('/',isAdmin, createLine);
+lineRouter.put('/:id',isAdmin ,updateLine);
+lineRouter.delete('/:id', isAdmin,deleteLine);
 
 export default lineRouter;

@@ -8,6 +8,34 @@ enum CarType {
   first_class
   second_class
 }
+enum CarName {
+    A
+    B
+    C
+    D
+    E
+    F
+    G
+    H
+    I
+    J
+    K
+    L
+    M
+    N
+    O
+    P
+    Q
+    R
+    S
+    T
+    U
+    V
+    W
+    X
+    Y
+    Z
+}
 
 // عربات القطار
 model Car {
@@ -25,6 +53,7 @@ const createCarSchema = z.object({
     trainId: z.string(),
     type: z.enum(["first_class", "second_class"]),
     seatCount: z.number(),
+    name: z.enum(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]),
 });
 
 const updateCarSchema = z.object({
@@ -37,12 +66,14 @@ type CreateCarInput = {
     trainId: string;
     type: "first_class" | "second_class";
     seatCount: number;
+    name: "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z";
 };
 
 type UpdateCarInput = {
     trainId: string;
     type: "first_class" | "second_class";
     seatCount: number;
+    name : "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z";
 };
 
 export async function getCars(req: Request, res: Response) {
@@ -92,21 +123,61 @@ export async function getCar(req: Request, res: Response) {
     }
 }
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns
+ * data: {
+ * car: {
+ * id: string,
+ * trainId: string,
+ * type: string,
+ * seatCount: number,
+ * }
+ * }
+ * @throws
+ * status: "error",
+ * message: "Invalid input",
+ */
 export async function createCar(req: Request, res: Response) {
     try {
-        const { trainId, type, seatCount } = req.body as CreateCarInput;
+        const { trainId, type, seatCount,name } = req.body as CreateCarInput;
         const result = createCarSchema.safeParse({
             trainId,
             type,
             seatCount,
+            name,
         });
         if (!result.success) {
             res.status(400).json({
                 status: "error",
                 message: "Invalid input",
-                data: result.error,
+                data: result.error.errors[0].message,
             });
         } else {
+            const train = await db.train.findUnique({
+                where: {
+                    id: trainId,
+                },
+            });
+            if (!train || train.status !== "active" || train.seatCount <= 0 || train.seatCount < seatCount) {
+                res.status(404).json({
+                    status: "error",
+                    message: "Train not found or train is inactive or seat count is less than 0 or seat count is less than car seat count",
+                });
+            }
+            const cars = await db.car.findUnique({
+                where: {
+                    name: name,
+                },
+            });
+            if (cars) {
+                res.status(404).json({
+                    status: "error",
+                    message: "Car name already exists, please choose another name",
+                });
+            }
             const car = await db.car.create({
                 data: {
                     trainId,

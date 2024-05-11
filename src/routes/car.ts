@@ -12,9 +12,9 @@ const carRouter = express.Router();
 
 // Car Routes
 carRouter.get('/cars', isAuthenticated,getCars);
-carRouter.get('/car/:id', isAuthenticated,getCar);
-carRouter.post('/car', isAdmin,createCar);
-carRouter.put('/car/:id', isAdmin,updateCar);
-carRouter.delete('/car/:id', isAdmin,deleteCar);
+carRouter.get('/:id', isAuthenticated,getCar);
+carRouter.post('/', isAdmin,createCar);
+carRouter.put('/:id', isAdmin,updateCar);
+carRouter.delete('/:id', isAdmin,deleteCar);
 
 export default carRouter;
