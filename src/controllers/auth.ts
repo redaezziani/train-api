@@ -6,7 +6,7 @@ import { ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput, for
 import  {
     sign,
 } from 'jsonwebtoken'
-import { createForgotPasswordToken, extractToken, randomNumber } from '../services/create-token'
+import { createForgotPasswordToken, extractToken, extractVerificationToken, randomNumber } from '../services/create-token'
 import { sendFogotPasswordEmail, sendVerificationEmail } from '../services/send-email'
 
 
@@ -346,7 +346,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         status: 'error',
       })
     }
-    const data = extractToken(token)
+    const data = extractVerificationToken(token)
     if (!data) {
       return res.status(400).json({
         error: 'Invalid token',
@@ -377,7 +377,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         status: 'error',
       })
     }
-    await db.users.update({
+   const verify= await db.users.update({
       where: {
         email,
       },
@@ -385,7 +385,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         isVerified: true,
       },
     })
-    if (!user.isVerified) {
+    if (!verify) {
       return res.status(400).json({
         error: 'Email not verified',
         status: 'error',
@@ -408,6 +408,11 @@ export const verifyEmail = async (req: Request, res: Response) => {
       message: 'Email verified successfully',
     })
   } catch (error) {
+    console.error(error)
+    res.status(500).json({
+        error: 'Internal server error',
+        status: 'error',
+        })
     
   }
 }

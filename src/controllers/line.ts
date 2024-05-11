@@ -67,6 +67,18 @@ export async function createLine(req: Request, res: Response) {
                 status: "error",
             });
         }
+        // check if the number is already in use
+        const existingLine = await db.line.findFirst({
+            where: {
+                number
+            }
+        });
+        if (existingLine) {
+            return res.status(400).json({
+                status: "error",
+                message: "Line number already in use try another one",
+            });
+        }
         const line = await db.line.create({
             data: {
                 number,

@@ -22,3 +22,7 @@ export const createVerificationToken = (email: string, secret: number) => {
         expiresIn: '10m',
     });
 }
+
+export const extractVerificationToken = (token: string) => {
+    return jwt.verify(token, process.env.JWT_SECRET as string) as { email: string, secret: number };
+}

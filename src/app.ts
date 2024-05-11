@@ -3,6 +3,7 @@ import errorHandlingMiddleware from "./middlewares/errorHandling";
 import authRouter from "./routes/auth";
 import lineRouter from "./routes/line";
 import carRouter from "./routes/car";
+import trainRouter from "./routes/train";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -111,6 +112,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/auth", authRouter);
 app.use("/line", lineRouter);
 app.use("/car", carRouter);
+app.use("/train", trainRouter);
 
 app.get('/auth/google',
   passport.authenticate('google', { scope:
