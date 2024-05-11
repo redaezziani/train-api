@@ -30,9 +30,12 @@ npm install
     Create a `.env` file in the root directory and add the following environment variables:
 
 ```bash
-PORT=3000
-DB_URL="mysql://root:password@localhost:3306/train_station_ticket_reservation"
-JWT_SECRET
+DATABASE_URL="db-type://user:password@server/db-name?sslmode=require"
+JWT_SECRET=""
+JWT_EXPIRES_IN="1d"
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+RESEND_API_KEY=""
 ```
 
 4. **Run Migrations**:
