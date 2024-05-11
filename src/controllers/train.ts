@@ -25,6 +25,8 @@ export async function getTrains(req: Request, res: Response) {
             status: "success",
             message: "Trains found",
             data: {
+                page: currentPage,
+                limit: currentLimit,
                 trains,
             },
         });
