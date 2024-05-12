@@ -7,6 +7,7 @@ import trainRouter from "./routes/train";
 import seatRouter from "./routes/seat";
 import tripRouter from "./routes/trip";
 import ticketRouter from "./routes/ticket";
+import userRouter from "./routes/user";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -115,6 +116,7 @@ app.use("/api/train", trainRouter);
 app.use("/api/seat", seatRouter);
 app.use("/api/trip", tripRouter);
 app.use("/api/ticket", ticketRouter);
+app.use("/api/user", userRouter);
 
 // Google authentication routes
 app.get('/api/auth/google',

@@ -95,7 +95,6 @@ export const createTrip = async (req: Request, res: Response) => {
             });
         }
 
-
         const trip = await db.trip.create({
             data: {
                 trainId,

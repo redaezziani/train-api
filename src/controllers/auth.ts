@@ -2,7 +2,7 @@ import {compare, hash,} from 'bcrypt'
 import {Request,Response,} from 'express'
 import db from '../db'
 import secrets from '../secrets'
-import { ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../lib/types/auth'
+import { ForgotPasswordInput, RegisterInput, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../lib/types/auth'
 import  {
     sign,
 } from 'jsonwebtoken'
