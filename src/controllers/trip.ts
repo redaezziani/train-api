@@ -111,6 +111,7 @@ export const createTrip = async (req: Request, res: Response) => {
                 message: "Failed to create trip",
             });
         }
+      
         res.status(201).json({
             status: "success",
             message: "Trip created",

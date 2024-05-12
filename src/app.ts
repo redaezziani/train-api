@@ -17,16 +17,18 @@ import secrets from "./secrets";
 import db from "./db";
 import { sign } from "jsonwebtoken";
 
+
 const app = express();
+
 const options = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
 
 app.use(errorHandlingMiddleware);
-app.use(bodyParser.json());
 app.use(cors(options));
 app.use(cookieParser());
+app.use(bodyParser.json());
 const port = 3000;
 
 // Configure express-session to use cookies
@@ -39,13 +41,12 @@ app.use(session({
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
-
 // Middleware to check if the user is logged in
 const isLoggedIn = (req: Request, res: Response, next: any) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/auth/google");
+  res.redirect("/api/auth/google");
 }
 
 // Google authentication strategy
@@ -55,6 +56,7 @@ passport.use(new GoogleStrategy({
   callbackURL: "http://localhost:3000/api/auth/google/callback",
   passReqToCallback: true
 },
+
 async function(request: any, accessToken: any, refreshToken: any, profile: { email: any; displayName: any; photos: { value: any; }[]; }, done: (arg0: unknown, arg1: string | undefined) => any) {
   try {
     let user = await db.users.findUnique({
@@ -83,12 +85,14 @@ async function(request: any, accessToken: any, refreshToken: any, profile: { ema
     }, secrets.jwtSecret, {
       expiresIn: secrets.jwtExpiration,
     });
-
     return done(null, token);
   } catch (error) {
     return done(error, undefined);
   }
 }));
+
+
+
 
 // Serialize and deserialize user sessions
 passport.serializeUser(function(user, done) {
@@ -124,6 +128,19 @@ app.get('/api/auth/google/callback',
   })
 );
 
+app.get('/api/auth/google/success', (req, res) => {
+  res.cookie('credentials', req.user, {
+    httpOnly: true,
+    secure: false,
+  });
+}
+);
+
+app.get('/api/auth/google/failure', (req, res) => {
+  res.send('Failed to authenticate with Google');
+});
+
 app.listen(port, () => {
   console.log(`Server started at ${port}`);
 });
+
