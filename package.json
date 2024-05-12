@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc && node build/app.js",
-    "dev": "nodemon --exec ts-node src/app.ts"
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "swagger": "npx swagger-autogen -i ./src/routes/*.ts -o src/swagger.json"
   },
   "keywords": [],
   "author": "",
@@ -29,8 +30,7 @@
     "prisma": "^5.13.0",
     "resend": "^3.2.0",
     "socket.io": "^4.7.5",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-autogen": "^2.23.7",
     "tsoa": "^6.2.1",
     "websocket": "^1.0.34",
     "zod": "^3.23.7"
@@ -52,6 +52,8 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "nodemon": "^3.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }

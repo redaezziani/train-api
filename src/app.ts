@@ -17,27 +17,61 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import secrets from "./secrets";
 import db from "./db";
 import { sign } from "jsonwebtoken";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
 
 const app = express();
-
+// alow swagger to use cors
 const options = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+
 };
 
 app.use(errorHandlingMiddleware);
 app.use(cors(options));
 app.use(cookieParser());
 app.use(bodyParser.json());
-const port = 3000;
+const port = secrets.port;
 
-// Configure express-session to use cookies
+// Swagger options
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Train API",
+      version: "1.0.0",
+      description: "API documentation for the Train API",
+    },
+    servers: [
+      {
+        url: `${secrets.host_url}:${port}`,
+        description: "Development server",
+      },
+    ],
+  },
+  // Path to the API routes
+  apis: ["./src/routes/*.ts"],
+};
+
+// Initialize Swagger-jsdoc
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(errorHandlingMiddleware);
+app.use(cors(options));
+app.use(cookieParser());
+app.use(bodyParser.json());
+
 app.use(session({
   secret: secrets.sessionSecret,
   resave: false,
   saveUninitialized: true,
 }));
+
+
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -54,7 +88,7 @@ const isLoggedIn = (req: Request, res: Response, next: any) => {
 passport.use(new GoogleStrategy({
   clientID: secrets.googleClientId,
   clientSecret: secrets.googleClientSecret,
-  callbackURL: "http://localhost:3000/api/auth/google/callback",
+  callbackURL: `${secrets.host_url}/api/auth/google/callback`,
   passReqToCallback: true
 },
 
@@ -143,6 +177,6 @@ app.get('/api/auth/google/failure', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server started at ${port}`);
+  console.log(`Server running on port ${port}`);
 });
 
