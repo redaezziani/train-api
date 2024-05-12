@@ -31,7 +31,8 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
         next();
     } catch (error) {
         console.error("Token verification error:", error);
-        res.status(401).json({ message: "Unauthorized: Invalid token" });
+        // lets delete the cookie
+        res.clearCookie("credentials");
     }
 };
 
@@ -76,6 +77,7 @@ export const isSuperAdmin = (req: Request, res: Response, next: NextFunction) =>
         if (decoded.role !== "super_admin") {
             return res.status(401).json({ message: "Unauthorized: Not a superadmin" });
         }
+
 
         next();
     } catch (error) {

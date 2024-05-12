@@ -106,7 +106,37 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const { email, name, password, role, profile, isVerified } = createUserSchema.parse(req.body);
+        const { email, name, password, role, profile, isVerified } = req.body as CreateUserInput;
+        const isSafe = createUserSchema.safeParse(
+            {
+                email,
+                name,
+                password,
+                role,
+                profile,
+                isVerified,
+            }
+        );
+        if (!isSafe.success) {
+            return res.status(400).json({
+                status: "error",
+                message: isSafe.error.errors[0].message,
+            });
+        }
+
+        const existingUser = await db.users.findFirst({
+            where: {
+                email,
+            },
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                status: "error",
+                message: "User already exists",
+            });
+        }
+
         const user = await db.users.create({
             data: {
                 email,
@@ -136,7 +166,32 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { email, name, password, role, profile, isVerified } = updateUserSchema.parse(req.body);
+        const { email, name, password, role, profile, isVerified } = req.body as UpdateUserInput;
+        const isSafe = updateUserSchema.safeParse({
+            email,
+            name,
+            password,
+            role,
+            profile,
+            isVerified,
+        });
+        if (!isSafe.success) {
+            return res.status(400).json({
+                status: "error",
+                message: isSafe.error.errors[0].message,
+            });
+        }
+        const existingUser = await db.users.findFirst({
+            where: {
+                id,
+            },
+        });
+        if (!existingUser) {
+            return res.status(404).json({
+                status: "error",
+                message: "User not found",
+            });
+        }
         const user = await db.users.update({
             where: {
                 id,

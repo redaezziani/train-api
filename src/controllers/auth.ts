@@ -180,7 +180,7 @@ export const login = async (req: Request, res: Response) => {
         res.cookie('credentials', token,{
             maxAge: 1000 * 60 * 60 * 24 * 7,
         })
-        res.status(200).redirect('/')
+        res.status(200).redirect('/api')
 
     } catch (error) {
         console.error(error)
