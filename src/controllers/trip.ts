@@ -127,7 +127,7 @@ export const createTrip = async (req: Request, res: Response) => {
 export const updateTrip = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { trainId, departureDate, arrivalDate, from, to } = req.body;
+        const { trainId, departureDate, arrivalDate, from, to,isStarted=false } = req.body;
         const trip = await db.trip.findUnique({
             where: {
                 id,
@@ -149,6 +149,7 @@ export const updateTrip = async (req: Request, res: Response) => {
                 arrivalDate,
                 from,
                 to,
+                isStarted
             },
         });
         res.status(200).json({
@@ -186,6 +187,63 @@ export const deleteTrip = async (req: Request, res: Response) => {
         res.status(200).json({
             status: "success",
             message: "Trip deleted",
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+
+export const startTrip = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const trip = await db.trip.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!trip) {
+            return res.status(404).json({
+                status: "error",
+                message: "Trip not found",
+            });
+        }
+        const updatedTrip = await db.trip.update({
+            where: {
+                id,
+            },
+            data: {
+                isStarted: true,
+            },
+        });
+        // lets get the train and update the status
+        const train = await db.train.findUnique({
+            where: {
+                id: updatedTrip.trainId,
+            },
+        });
+        if (!train) {
+            return res.status(404).json({
+                status: "error",
+                message: "Train not found",
+            });
+        }
+
+        const updatedTrain = await db.train.update({
+            where: {
+                id: train.id,
+            },
+            data: {
+                status: "inactive",
+            },
+        });
+        res.status(200).json({
+            status: "success",
+            message: "Trip started",
+            data: {
+                trip: updatedTrip,
+            },
         });
     } catch (error) {
         console.error(error);

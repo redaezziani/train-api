@@ -123,6 +123,7 @@ model Trip {
   train         Train    @relation(fields: [trainId], references: [id],onDelete: Cascade)
   trainId       String
   departureDate DateTime
+  isStarted     Boolean  @default(false)
   arrivalDate   DateTime
   tickets       Ticket[]
   from          String

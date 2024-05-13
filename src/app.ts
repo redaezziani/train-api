@@ -45,7 +45,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `${secrets.host_url}:${port}`,
+        url: `${secrets.host_url}`,
         description: "Development server",
       },
     ],
@@ -91,12 +91,12 @@ passport.use(new GoogleStrategy({
   callbackURL: `${secrets.host_url}/api/auth/google/callback`,
   passReqToCallback: true
 },
-
-async function(request: any, accessToken: any, refreshToken: any, profile: { email: any; displayName: any; photos: { value: any; }[]; }, done: (arg0: unknown, arg1: string | undefined) => any) {
+async (request: any, accessToken: any, refreshToken: any, profile: { email: any; displayName: any; photos: { value: any; }[]; }, done: (arg0: unknown, arg1: string | undefined) => any)=> {
   try {
     let user = await db.users.findUnique({
       where: { email: profile.email },
     });
+
 
     if (!user) {
       user = await db.users.create({
@@ -121,6 +121,7 @@ async function(request: any, accessToken: any, refreshToken: any, profile: { ema
       expiresIn: secrets.jwtExpiration,
     });
     return done(null, token);
+    
   } catch (error) {
     return done(error, undefined);
   }
@@ -165,10 +166,8 @@ app.get('/api/auth/google/callback',
 );
 
 app.get('/api/auth/google/success', (req, res) => {
-  res.cookie('credentials', req.user, {
-    httpOnly: true,
-    secure: false,
-  });
+  res.cookie('credentials', req.user);
+  res.redirect(`${secrets.host_url}/api`);
 }
 );
 

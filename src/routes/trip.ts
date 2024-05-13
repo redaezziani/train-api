@@ -1,5 +1,5 @@
 import express from "express";
-import { getTrips, getTrip, createTrip,updateTrip, deleteTrip } from "../controllers/trip";
+import { getTrips, getTrip, createTrip,updateTrip, deleteTrip ,startTrip} from "../controllers/trip";
 import { isAuthenticated, isAdmin } from "../middlewares/auth";
 const tripRouter = express.Router();
 /**
@@ -216,10 +216,11 @@ const tripRouter = express.Router();
  *           type: string
  *       required: []
  */
-
+tripRouter.use(isAuthenticated);
 tripRouter.get("/trips", getTrips);
 tripRouter.get("/:id", getTrip);
 tripRouter.post("/",  isAdmin, createTrip);
 tripRouter.put("/:id", isAdmin, updateTrip);
 tripRouter.delete("/:id", isAdmin, deleteTrip);    
+tripRouter.put("/start/:id", isAdmin, startTrip);
 export default tripRouter;

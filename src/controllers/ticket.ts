@@ -96,12 +96,18 @@ export const createTicket = async (req: Request, res: Response)=> {
                 message: "Trip not found"
             });
         }
-        // check if the userId exists
+        if (trip.isStarted){
+            return res.status(400).json({
+                status: "error",
+                message: "Trip has already started, you can't book a ticket"
+            });
+        }
         const user = await db.users.findUnique({
             where: {
                 id: userId
             }
         });
+
         if (!user) {
             return res.status(404).json({
                 status: "error",
@@ -120,7 +126,6 @@ export const createTicket = async (req: Request, res: Response)=> {
                 message: "Seat not found"
             });
         }
-
         const ticket = await db.ticket.create({
             data: {
                 carId,

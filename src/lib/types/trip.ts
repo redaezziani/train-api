@@ -29,6 +29,7 @@ export const createTripSchema = z.object({
     to: z.string({
         message: "please enter a valid to",
     }),
+    isStarted : z.boolean().optional(),
 });
 
 export const updateTripSchema = z.object({
@@ -37,6 +38,7 @@ export const updateTripSchema = z.object({
     arrivalDate: z.string().optional(),
     from: z.string().optional(),
     to: z.string().optional(),
+    isStarted : z.boolean().optional(),
 });
 
 export type CreateTripInput = z.infer<typeof createTripSchema>;
