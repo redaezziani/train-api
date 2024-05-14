@@ -1,6 +1,8 @@
 import express from 'express';
 import { getTickets, getTicket, createTicket,updateTicket,deleteTicket } from '../controllers/ticket';
 import { isAuthenticated, isAdmin } from '../middlewares/auth';
+import fs from 'fs';
+import path from 'path';
 const ticketRouter = express.Router();
 /**
  * @swagger
@@ -300,7 +302,19 @@ const ticketRouter = express.Router();
  *       '500':
  *         description: Internal Server Error
  */
-
+const tiketPagePath = path.join(process.cwd(), 'src/pages/tiket.html');
+ticketRouter.get("/user-ticket", (req, res) => {
+    fs.readFile(tiketPagePath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({
+                status: "error",
+                message: "Internal Server Error"
+            });
+        }
+        res.send(data);
+    });
+}
+);
 ticketRouter.get("/tickets", getTickets);
 ticketRouter.get("/:id", getTicket);
 ticketRouter.post("/",  isAuthenticated,createTicket);

@@ -19,6 +19,8 @@ import db from "./db";
 import { sign } from "jsonwebtoken";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
 // alow swagger to use cors
@@ -140,6 +142,11 @@ passport.deserializeUser((obj:any, done) =>{
 });
 
 // API routes
+
+app.get("/", (req: Request, res: Response) => {
+  const index = fs.readFileSync(path.join(__dirname, './pages/index.html'), 'utf8');
+  res.send(index);
+});
 app.get("/api", (req: Request, res: Response) => {
   res.send("Welcome to the train API");
 });

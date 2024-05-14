@@ -1,43 +1,7 @@
 import {Request, Response } from 'express';
 import db from '../db';
 import { CreateTicketInput, UpdateTicketInput, createTicketSchema, updateTicketSchema } from '../lib/types/ticket';
-/*
-import z from "zod";
-export const createTicketSchema = z.object({
-    carId: z.string({
-        message: "please enter a valid car id",
-    }),
-    seatNumber: z.number({
-        message: "please enter a valid seat number",
-    }),
-    price: z.number({
-        message: "please enter a valid price",
-    }),
-    passenger: z.string({
-        message: "please enter a valid passenger",
-    }),
-    tripId: z.string({
-        message: "please enter a valid trip id",
-    }),
-    userId: z.string({
-        message: "please enter a valid user id",
-    }),
-    seatId: z.string().optional(),
-});
-
-export const updateTicketSchema = z.object({
-    carId: z.string().optional(),
-    seatNumber: z.number().optional(),
-    price: z.number().optional(),
-    passenger: z.string().optional(),
-    tripId: z.string().optional(),
-    userId: z.string().optional(),
-    seatId: z.string().optional(),
-});
-
-export type CreateTicketInput = z.infer<typeof createTicketSchema>;
-export type UpdateTicketInput = z.infer<typeof updateTicketSchema>;
-*/
+import { createTiketPage } from '../services/create-tiket-page';
 
 export const getTickets = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -115,9 +79,10 @@ export const createTicket = async (req: Request, res: Response)=> {
             });
         }
         // check if the seatId exists
-        const seat = await db.seat.findUnique({
+        const seat = await db.seat.findFirst({
             where: {
-                id: seatId
+                carId: carId,
+                seatNumber: seatNumber
             }
         });
         if (!seat) {
@@ -138,10 +103,36 @@ export const createTicket = async (req: Request, res: Response)=> {
             }
         });
 
-        return res.json({
-            status: "success",
-            data: ticket
+
+
+        if (!ticket) {
+            return res.status(400).json({
+                status: "error",
+                message: "Unable to create ticket"
+            });
+        }
+        console.log(seatId)
+        const updatedSeat = await db.seat.update({
+            where: {
+                id: seatId,
+                carId: carId,
+            },
+            data: {
+                isBooked: true
+            }
         });
+
+        if (!updatedSeat) {
+            return res.status(400).json({
+                status: "error",
+                message: "Unable to book seat"
+            });
+        }
+
+
+        const tiketPagePath =  createTiketPage(ticket);
+        // lets send the user to this page
+        res.redirect('/api/ticket/user-ticket');
 
     } catch (error) {
         return res.json(error);
