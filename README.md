@@ -75,6 +75,13 @@ npm run dev
 The API provides the following endpoints:
 ## Available Endpoints
 
+-you can visit the API documentation at `http://localhost:3000/api-docs` to see the available endpoints and their descriptions.
+
+<img
+style="border-radius: 2%"
+ src="api-docs.png" alt="Train Station Ticket Reservation API" align="center" />
+
+
 - **Authentication Routes**:
 - `/auth/register`: Register a new user.
 - `/auth/login`: Login with existing credentials.
