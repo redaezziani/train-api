@@ -1,45 +1,159 @@
 
     <!DOCTYPE html>
     <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css" rel="stylesheet">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
         <title>Tiket</title>
         <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-body {
-    font-family: 'Roboto', sans-serif;
-}
-</style>
-    </head>
-    <body>
+          @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+          body {
+            font-family: "Roboto", sans-serif;
+            direction: rtl;
+            text-align: right;
+            overflow: hidden;
+          }
+    
+        </style>
+      </head>
+      <body class="bg-slate-100 h-screen w-screen flex items-center justify-center">
         <div class="container mt-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title
-                    ">Tiket</h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">Name: reda</p>
-                    <p class="card-text">Email: reda@gmail.com</p>
-                    <p class="card-text">Car: A</p>
-                    <p class="card-text">Seat Number: 2</p>
-                    <p class="card-text">Car Type: first_class</p>
-                    <p class="card-text">Price: 200 DH</p>
-                    <p class="card-text">Departure Date: 5/14/2024, 1:35:09 PM</p>
-                    <p class="card-text">Arrival Date: 5/14/2024, 1:35:09 PM</p>
-                    <p class="card-text">From: casa</p>
-                    <p class="card-text">To: rabat</p>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="button" class="btn d-flex gap-2 btn-warning">
-                        Print tiket  <i class="fas fa-print"></i>
-                    </button>
+          <div class="max-w-md w-full h-full mx-auto bg-salte-100 z-10 rounded-3xl">
+            <div class="flex flex-col">
+              <div class="bg-white relative rounded-xl p-1 m-4">
+                <div class="flex-none sm:flex">
+                  <div class="flex-auto justify-evenly">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center my-1">
+                        <span class="ml-3 rounded-full bg-white w-8 h-8">
+                          <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="h-8 p-1" />
+                        </span>
+                        <h2 class="font-medium">قطار</h2>
+                      </div>
+                      <div class="mr-auto text-blue-800">
+                        1
+                      </div>
                     </div>
+                    <div class="border-b border-dashed border-b-2 my-5"></div>
+                    <div class="flex items-center">
+                      <div class="flex flex-col">
+                        <div class="flex-auto text-xs text-gray-400 my-1">
+                          <span class="mr-1">المغادرة</span>
+                        </div>
+                        <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                          الدار البيضاء 
+                        </div>
+                      </div>
+                      <div class="flex flex-col mx-auto">
+                        <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="w-20 p-1" />
+                      </div>
+                      <div class="flex flex-col">
+                        <div class="flex-auto text-xs text-gray-400 my-1">
+                          <span class="mr-1">الوصول</span>
+                        </div>
+                        <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                          الرباط
+                        </div>
+                      </div>
+                    </div>
+                    <div class="border-b border-dashed border-b-2 my-5 pt-5">
+                      <div class="absolute rounded-full w-5 h-5 bg-slate-100 -mt-2 -left-2"></div>
+                      <div class="absolute rounded-full w-5 h-5 bg-slate-100 -mt-2 -right-2"></div>
+                    </div>
+                    <div class="flex items-center mb-5 p-5 text-sm">
+                      <div class="flex flex-col">
+                        <span class="text-sm">
+                            
+                            رقم العربة
+    
+                        </span>
+                        <div class="font-semibold">
+                        A
+                        </div>
+                      </div>
+                      <div class="flex flex-col mr-auto">
+                        <span class="text-sm">النوع</span>
+                        <div class="font-semibold">
+                        الدرجة الأولى
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex items-center mb-4 px-5">
+                      <div class="flex flex-col text-sm">
+                        <span class="">المغادرة</span>
+                        <div class="font-semibold">
+                        13:35
+                        </div>
+                      </div>
+                      <div class="flex flex-col mr-auto text-sm">
+                        <span class="">الوصول</span>
+                        <div class="font-semibold">
+                        13:35
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex-none sm:flex">
+                        <div class="flex-auto justify-evenly">
+                          
+                          <div class="border-b border-dashed border-b-2 my-5"></div>
+                          <div class="flex items-center">
+                            <div class="flex flex-col">
+                              <div class="flex-auto text-xs text-gray-400 my-1">
+                                <span class="mr-1">الاسم</span>
+                              </div>
+                              <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                                 أحمد بن محمد 
+                              </div>
+                            </div>
+                            <div class="flex flex-col mx-auto">
+                              <img src="https://cdn-icons-png.flaticon.com/512/4296/4296808.png" class="w-20 p-1" />
+                            </div>
+                            <div class="flex flex-col">
+                              <div class="flex-auto text-xs text-gray-400 my-1">
+                                <span class="mr-1">الهوية</span>
+                              </div>
+                              <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                                GM2993883
+                              </div>
+                            </div>
+                          </div>
+                          <div class="border-b border-dashed border-b-2 my-5 pt-5">
+                            <div class="absolute rounded-full w-5 h-5 bg-gray-100 -mt-2 -left-2"></div>
+                            <div class="absolute rounded-full w-5 h-5 bg-gray-100 -mt-2 -right-2"></div>
+                          </div>
+                          <div class="flex items-center mb-5 p-5 text-sm">
+                            <div class="flex flex-col">
+                              <span class="text-sm">الهاتف</span>
+                              <div class="font-semibold">123-456-789</div>
+                            </div>
+                            <div class="flex flex-col mr-auto">
+                              <span class="text-sm">البريد الإلكتروني</span>
+                              <div class="font-semibold">
+                              klausdev2@gmail.com
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="flex justify-center pb-5">
+                            <img
+                            class="w-32 mx-auto"
+                            src="data:image/png;base64,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" />
+                          </div>
+                        </div>
+                      </div>
+                  </div>
                 </div>
+              </div>
+              
+              <div class="flex justify-center pb-5">
+                <button class="bg-blue-800 text-white py-2 px-4 rounded-xl">طباعة التذكرة</button>
+              </div>
             </div>
+          </div>
         </div>
-    </body>
+      </body>
     </html>
+    </html>
+        
     

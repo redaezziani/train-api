@@ -21,6 +21,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import fs from 'fs';
 import path from 'path';
+import { generateQRCode } from "./services/generate-qr-code";
 
 const app = express();
 // alow swagger to use cors
@@ -147,8 +148,9 @@ app.get("/", (req: Request, res: Response) => {
   const index = fs.readFileSync(path.join(__dirname, './pages/index.html'), 'utf8');
   res.send(index);
 });
-app.get("/api", (req: Request, res: Response) => {
-  res.send("Welcome to the train API");
+app.get("/api", async (req: Request, res: Response) => {
+  const qr = await generateQRCode('https://www.google.com');
+  res.send(`<img src="${qr}" alt="QR Code"/>`);
 });
 
 app.use("/api/auth", authRouter);

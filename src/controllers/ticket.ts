@@ -85,10 +85,10 @@ export const createTicket = async (req: Request, res: Response)=> {
                 seatNumber: seatNumber
             }
         });
-        if (!seat) {
+        if (!seat || seat.isBooked) {
             return res.status(404).json({
                 status: "error",
-                message: "Seat not found"
+                message: "Seat not found or already booked"
             });
         }
         const ticket = await db.ticket.create({
