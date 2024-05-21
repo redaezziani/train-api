@@ -185,8 +185,7 @@ The API provides the following routes for each model:
 - **Passport.js Documentation**: [http://www.passportjs.org/docs](http://www.passportjs.org/docs)
 - **TypeScript Documentation**: [https://www.typescriptlang.org/docs](https://www.typescriptlang.org/docs)
 
+## Badges
 
-
-
-
-
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
