@@ -13,6 +13,7 @@ Welcome to the Train Station Ticket Reservation API repository! This project pro
 3. [Running the Project](#running-the-project)
 4. [Security Considerations](#security-considerations)
 5. [Model Routes](#model-routes)
+6. [Links](#links)
 
 ## Setup Instructions
 
@@ -174,6 +175,31 @@ The API provides the following routes for each model:
 - `/train/:id`: Update details of a train (Admin only).
 - `/train/:id`: Delete a train (Admin only).
 -and more...
+
+## Links
+
+- **API Documentation**: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- **Google OAuth2 Console**: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
+- **Prisma Documentation**: [https://www.prisma.io/docs](https://www.prisma.io/docs)
+- **Zod Documentation**: [https://zod.dev](https://zod.dev/docs)
+- **Passport.js Documentation**: [http://www.passportjs.org/docs](http://www.passportjs.org/docs)
+- **TypeScript Documentation**: [https://www.typescriptlang.org/docs](https://www.typescriptlang.org/docs)
+- **Node.js Documentation**: [https://nodejs.org/docs](https://nodejs.org/docs)
+- **Express Documentation**: [https://expressjs.com/docs](https://expressjs.com/docs)
+- **MySQL Documentation**: [https://dev.mysql.com/doc](https://dev.mysql.com/doc)
+- **Postman Documentation**: [https://learning.postman.com/docs](https://learning.postman.com/docs)
+- **Swagger Documentation**: [https://swagger.io/docs](https://swagger.io/docs)
+- **JWT Documentation**: [https://jwt.io/docs](https://jwt.io/docs)
+- **OAuth2 Documentation**: [https://oauth.net/2](https://oauth.net/2)
+- **Rate Limiting Documentation**: [https://en.wikipedia.org/wiki/Rate_limiting](https://en.wikipedia.org/wiki/Rate_limiting)
+- **Security Best Practices**: [https://owasp.org/www-project-top-ten](https://owasp.org/www-project-top-ten)
+- **RESTful API Design**: [https://restfulapi.net](https://restfulapi.net)
+- **API Versioning**: [https://restfulapi.net/versioning](https://restfulapi.net/versioning)
+- **API Pagination**: [https://restfulapi.net/pagination](https://restfulapi.net/pagination)
+- **API Filtering**: [https://restfulapi.net/filtering](https://restfulapi.net/filtering)
+- **API Sorting**: [https://restfulapi.net/sorting](https://restfulapi.net/sorting)
+
+
 
 
 
