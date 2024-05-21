@@ -1,5 +1,8 @@
-<img src="cover.png" alt="Train Station Ticket Reservation API" align="center" />
-# Train Station Ticket Reservation API
+<img
+style="border-radius: 2%"
+ src="cover.png" alt="Train Station Ticket Reservation API" align="center" />
+
+## Train Station Ticket Reservation API
 
 Welcome to the Train Station Ticket Reservation API repository! This project provides a modern and efficient solution for booking train tickets at stations. The API is built using Node.js Express, with TypeScript, Zod, Prisma, MySQL, and Passport.js.
 
