@@ -34,12 +34,35 @@ npm install
     Create a `.env` file in the root directory and add the following environment variables:
 
 ```bash
-DATABASE_URL="db-type://user:password@server/db-name?sslmode=require"
-JWT_SECRET=""
+# Rename this file to .env and fill in the values for your environment
+
+# PostgreSQL Database URL
+DATABASE_URL="postgresql://your_username:your_password@your_host/your_database?sslmode=require"
+
+# Secret key for JWT token
+JWT_SECRET="your_jwt_secret_key"
+
+# JWT token expiration time
 JWT_EXPIRES_IN="1d"
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
-RESEND_API_KEY=""
+
+# Google OAuth2 Client ID
+GOOGLE_CLIENT_ID="your_google_client_id"
+
+# Google OAuth2 Client Secret
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
+
+# API key for resending service
+RESEND_API_KEY="your_resend_api_key"
+
+# Secret key for session
+SESSION_SECRET="your_session_secret_key"
+
+# Base URL of your application
+HOST_URL="http://your_host:your_port"
+
+# Port for your application
+PORT=your_port
+
 ```
 
 4. **Run Migrations**:
@@ -150,21 +173,7 @@ The API provides the following routes for each model:
 - `/train`: Create a new train (Admin only).
 - `/train/:id`: Update details of a train (Admin only).
 - `/train/:id`: Delete a train (Admin only).
-
-- **Schedule**:
-- `/schedule/schedules`: Get all schedules.
-- `/schedule/:id`: Get details of a specific schedule.
-- `/schedule`: Create a new schedule (Admin only).
-- `/schedule/:id`: Update details of a schedule (Admin only).
-- `/schedule/:id`: Delete a schedule (Admin only).
-
-- **Route**:
-- `/route/routes`: Get all routes.
-- `/route/:id`: Get details of a specific route.
-- `/route`: Create a new route (Admin only).
-- `/route/:id`: Update details of a route (Admin only).
-- `/route/:id`: Delete a route (Admin only)
-
+-and more...
 
 
 
